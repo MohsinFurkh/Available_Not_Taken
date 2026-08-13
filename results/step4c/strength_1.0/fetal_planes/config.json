@@ -1,0 +1,128 @@
+{
+  "name": "step4c_positive_control",
+  "dataset": {
+    "name": "fetal_planes",
+    "root": "/home/mohsin/Research/Literature/Fetal-Obstetric/Datasets/FETAL_PLANES_DB_data",
+    "task": "classification",
+    "label_column": "label",
+    "group_column": "patient_id",
+    "num_classes": 6,
+    "class_names": [
+      "Fetal abdomen",
+      "Fetal brain",
+      "Fetal femur",
+      "Fetal thorax",
+      "Maternal cervix",
+      "Other"
+    ],
+    "official_fold_column": null,
+    "mask_sensitivity_floor": 0.9,
+    "grayscale": true,
+    "notes": "12,400 images / 1,792 patients. Used as the benchmark by Barrientos 2026 and Conti 2025, so results are comparable to the current literature. The Plane column is the 6-class target; Brain_plane, Operator and US_Machine are kept as covariates for stratified reporting -- US_Machine in particular is itself burnt into the pixels, so it is both a covariate and part of the leak.\n"
+  },
+  "annotation": {
+    "fan_threshold": 10,
+    "fan_open_kernel": 15,
+    "text_tophat_kernel": 7,
+    "graphic_min_tophat": 18,
+    "graphic_min_intensity": 30,
+    "text_min_area": 5,
+    "text_max_area": 2500,
+    "graphic_min_sharpness": 3.2,
+    "text_min_contrast": 45.0,
+    "text_max_peak_spread": 10.0,
+    "text_min_line_members": 2,
+    "text_min_word_aspect": 2.5,
+    "text_max_word_fill": 0.7,
+    "caliper_min_area": 8,
+    "caliper_max_area": 600,
+    "caliper_max_aspect": 2.5,
+    "caliper_min_contrast": 48.0,
+    "caliper_max_fill": 0.62,
+    "tick_edge_band_frac": 0.06,
+    "tick_max_area": 400,
+    "tick_min_contrast": 25.0,
+    "tick_min_members": 4,
+    "tick_max_spacing_cv": 0.55,
+    "redaction_max_intensity": 2,
+    "redaction_min_area_frac": 0.0015,
+    "redaction_min_rectangularity": 0.93,
+    "redaction_max_area_frac": 0.15,
+    "overlay_min_saturation": 40,
+    "overlay_min_value": 45,
+    "overlay_max_component_area_frac": 0.02,
+    "overlay_max_component_density": 0.3,
+    "overlay_use_kmeans": false,
+    "overlay_kmeans_k": 5,
+    "dilate_px": 4,
+    "min_component_area": 4,
+    "inpaint_method": "navier_stokes",
+    "inpaint_radius": 3,
+    "a_only_fill": "noise",
+    "ctrl_max_placement_tries": 40
+  },
+  "split": {
+    "n_folds": 5,
+    "n_seeds": 2,
+    "seed0": 1000,
+    "val_fraction": 0.15,
+    "stratify": true,
+    "use_official_folds": true
+  },
+  "model": {
+    "backbone": "resnet50",
+    "pretrained": "imagenet",
+    "weights_path": null,
+    "image_size": 224,
+    "dropout": 0.0,
+    "freeze_backbone": false
+  },
+  "aux": {
+    "enabled": false,
+    "categorical_fields": [],
+    "numeric_fields": [],
+    "lambda_aux": 1.0
+  },
+  "synthetic": {
+    "enabled": true,
+    "area_frac": 0.007,
+    "intensity": 220,
+    "strength": 1.0,
+    "grid": 4,
+    "seed": 7
+  },
+  "train": {
+    "epochs": 12,
+    "batch_size": 64,
+    "lr": 0.0003,
+    "weight_decay": 0.0001,
+    "optimizer": "adamw",
+    "scheduler": "cosine",
+    "warmup_epochs": 1,
+    "early_stop_patience": 4,
+    "num_workers": 2,
+    "amp": true,
+    "label_budget": 1.0,
+    "annotation_randomising_aug": false,
+    "annotation_aug_prob": 0.5,
+    "grad_clip": 1.0
+  },
+  "eval": {
+    "test_variants": [
+      "a_full",
+      "a_full__nomarker",
+      "a_only",
+      "a_removed"
+    ],
+    "calibration_bins": 15,
+    "bootstrap_replicates": 2000,
+    "bootstrap_seed": 20260805,
+    "save_predictions": true,
+    "saliency": false,
+    "saliency_max_images": 512
+  },
+  "regimes": [
+    "r_naive"
+  ],
+  "output_dir": "runs/step4c_positive_control"
+}

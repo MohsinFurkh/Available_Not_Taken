@@ -1,0 +1,20 @@
+# HC18 -- primary fetal regression arm, and the low-annotation contrast case.
+# Sampled images are largely pre-scrubbed (faint vendor text plus a solid black
+# redaction box pasted over the bottom-right corner). That box is annotation
+# removal already performed by the curator, undocumented and unmeasured, and is
+# detected separately as a candidate second shortcut.
+name: hc18
+root: "datasets/HC18 Dataset"   # set to wherever you extracted it
+task: regression
+label_column: target
+group_column: patient_id
+num_classes: 0
+official_fold_column: null
+mask_sensitivity_floor: 0.90
+grayscale: true   # B-mode is achromatic; packing single-channel is lossless and 3x smaller
+notes: >
+  999 labelled training images; the challenge test set carries no labels and is
+  excluded rather than pseudo-labelled. No subject identifier is published, so
+  grouping is at file level -- a stated limitation, not a patient-level split.
+  Caliper/measurement annotation is intrinsic to the biometry task, making this
+  the highest-prior-probability shortcut candidate for regression.

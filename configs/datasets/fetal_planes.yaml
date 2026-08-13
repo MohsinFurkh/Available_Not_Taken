@@ -1,0 +1,20 @@
+# FETAL_PLANES_DB (Burgos-Artizzu et al.) -- primary fetal classification arm.
+# Verified to retain burnt-in vendor chrome: sampled images carry the acquisition
+# preset as literal text ("Cardiac" on a Fetal thorax frame, "Routine 2 Trim./OB"
+# on a brain frame), which is a direct label leak rather than a subtle shortcut.
+name: fetal_planes
+root: "datasets/FETAL_PLANES_DB_data"   # set to wherever you extracted it
+task: classification
+label_column: label
+group_column: patient_id
+num_classes: 6
+class_names: ["Fetal abdomen", "Fetal brain", "Fetal femur", "Fetal thorax", "Maternal cervix", "Other"]
+official_fold_column: null
+mask_sensitivity_floor: 0.90
+grayscale: true   # B-mode is achromatic; packing single-channel is lossless and 3x smaller
+notes: >
+  12,400 images / 1,792 patients. Used as the benchmark by Barrientos 2026 and
+  Conti 2025, so results are comparable to the current literature. The Plane
+  column is the 6-class target; Brain_plane, Operator and US_Machine are kept as
+  covariates for stratified reporting -- US_Machine in particular is itself burnt
+  into the pixels, so it is both a covariate and part of the leak.

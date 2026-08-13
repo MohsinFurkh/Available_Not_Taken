@@ -1,0 +1,57 @@
+# Step 4 -- the minimal decisive experiment and the project's kill switch.
+#
+# Proposal, Recommended sequence: "Before building anything else: train one
+# ResNet-50 on one dataset (A-full), test on A-only. If performance is at chance
+# across two datasets, the central hypothesis is refuted cheaply and the project
+# should be redirected to D2. This is the go/no-go gate and it costs almost
+# nothing."
+#
+# Deliberately small: one backbone, one regime, 3 folds x 2 seeds, short
+# schedule. On a Colab T4 this is roughly 40-60 minutes per dataset at 224 px.
+# Do NOT enlarge it before it has been run -- the whole point is that the gate
+# is cheap enough that a negative result costs two weeks rather than two months.
+
+name: step4_gate
+dataset: fetal_planes
+
+regimes: ["r_naive"]          # train on A-full only; this is what the gate tests
+
+model:
+  backbone: resnet50
+  pretrained: imagenet
+  image_size: 224
+
+split:
+  n_folds: 5
+  n_seeds: 2
+  seed0: 1000
+  val_fraction: 0.15
+  stratify: true
+  use_official_folds: true
+
+train:
+  epochs: 12
+  batch_size: 64
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  optimizer: adamw
+  scheduler: cosine
+  warmup_epochs: 1
+  early_stop_patience: 4
+  num_workers: 2
+  amp: true
+  label_budget: 1.0
+
+eval:
+  # All four variants, including the R5 equal-area control -- it is in the gate
+  # rather than deferred because it is the one result that can refute the
+  # hypothesis outright, and finding that out later would be worse.
+  test_variants: ["a_full", "a_removed", "a_only", "ctrl_random"]
+  calibration_bins: 15
+  bootstrap_replicates: 2000
+  saliency: false
+
+aux:
+  enabled: false
+
+output_dir: runs/step4_gate

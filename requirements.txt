@@ -1,0 +1,20 @@
+# Stage A/B (local, CPU): manifests, annotation masks, variant packaging
+numpy>=1.26
+pandas>=2.0
+opencv-python-headless>=4.9
+pillow>=10.0
+scikit-learn>=1.4
+scipy>=1.11
+pyyaml>=6.0
+tqdm>=4.66
+tabulate>=0.9        # pandas .to_markdown, used by scripts/analyse_matrix.py
+
+# Optional: OCR enrichment for the weak-supervision parse (asa.annot.parse).
+# The annotation MASK does not depend on OCR -- masks come from geometry and
+# morphology so that mask quality is never bounded by OCR recall (see README).
+#   sudo apt-get install tesseract-ocr
+pytesseract>=0.3.10
+
+# Stage C (Colab/Kaggle GPU): training + evaluation
+torch>=2.2
+torchvision>=0.17

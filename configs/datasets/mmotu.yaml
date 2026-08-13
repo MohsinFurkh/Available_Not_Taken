@@ -1,0 +1,23 @@
+# MMOTU-2D -- multi-class stress case.
+# Sampled images carry yellow calipers with a dotted measurement line drawn
+# across the finding, plus chromatic vendor text. Because B-mode is achromatic,
+# the chromatic-overlay detector recovers these at very high precision.
+name: mmotu
+root: "datasets/MMOTU"   # set to wherever you extracted it
+task: classification
+label_column: label
+group_column: patient_id
+num_classes: 8
+class_names: ["chocolate cyst", "serous cystadenoma", "teratoma", "theca cell tumour",
+              "simple cyst", "normal ovary", "mucinous cystadenoma", "high grade serous"]
+official_fold_column: null
+mask_sensitivity_floor: 0.90
+# Colour is annotation here: the yellow calipers and dotted measurement line are
+# recovered by the chromatic-overlay detector, so packing grayscale would delete
+# the very signal this dataset contributes.
+grayscale: false
+notes: >
+  1,469 images over 247 patients, but no patient identifier is published for the
+  2D set, so grouping is at file level. Treated as supporting evidence only,
+  exactly as the proposal's dataset table states -- 247 patients over 8 classes
+  is a stress case, not a primary arm.

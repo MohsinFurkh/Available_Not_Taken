@@ -1,0 +1,134 @@
+[
+  {
+    "fold": 0,
+    "seed": 1000,
+    "train": 1275,
+    "val": 224,
+    "test": 376,
+    "train_groups": 724,
+    "train_class_counts": {
+      "0": 875,
+      "1": 400
+    },
+    "val_groups": 128,
+    "val_class_counts": {
+      "0": 139,
+      "1": 85
+    },
+    "test_groups": 212,
+    "test_class_counts": {
+      "0": 254,
+      "1": 122
+    }
+  },
+  {
+    "fold": 1,
+    "seed": 1000,
+    "train": 1265,
+    "val": 225,
+    "test": 385,
+    "train_groups": 723,
+    "train_class_counts": {
+      "0": 847,
+      "1": 418
+    },
+    "val_groups": 128,
+    "val_class_counts": {
+      "0": 161,
+      "1": 64
+    },
+    "test_groups": 213,
+    "test_class_counts": {
+      "0": 260,
+      "1": 125
+    }
+  },
+  {
+    "fold": 2,
+    "seed": 1000,
+    "train": 1272,
+    "val": 237,
+    "test": 366,
+    "train_groups": 723,
+    "train_class_counts": {
+      "0": 847,
+      "1": 425
+    },
+    "val_groups": 128,
+    "val_class_counts": {
+      "0": 175,
+      "1": 62
+    },
+    "test_groups": 213,
+    "test_class_counts": {
+      "0": 246,
+      "1": 120
+    }
+  },
+  {
+    "fold": 0,
+    "seed": 1001,
+    "train": 1272,
+    "val": 227,
+    "test": 376,
+    "train_groups": 724,
+    "train_class_counts": {
+      "0": 854,
+      "1": 418
+    },
+    "val_groups": 128,
+    "val_class_counts": {
+      "0": 160,
+      "1": 67
+    },
+    "test_groups": 212,
+    "test_class_counts": {
+      "0": 254,
+      "1": 122
+    }
+  },
+  {
+    "fold": 1,
+    "seed": 1001,
+    "train": 1262,
+    "val": 228,
+    "test": 385,
+    "train_groups": 723,
+    "train_class_counts": {
+      "0": 857,
+      "1": 405
+    },
+    "val_groups": 128,
+    "val_class_counts": {
+      "0": 151,
+      "1": 77
+    },
+    "test_groups": 213,
+    "test_class_counts": {
+      "0": 260,
+      "1": 125
+    }
+  },
+  {
+    "fold": 2,
+    "seed": 1001,
+    "train": 1281,
+    "val": 228,
+    "test": 366,
+    "train_groups": 723,
+    "train_class_counts": {
+      "0": 861,
+      "1": 420
+    },
+    "val_groups": 128,
+    "val_class_counts": {
+      "0": 161,
+      "1": 67
+    },
+    "test_groups": 213,
+    "test_class_counts": {
+      "0": 246,
+      "1": 120
+    }
+  }
+]

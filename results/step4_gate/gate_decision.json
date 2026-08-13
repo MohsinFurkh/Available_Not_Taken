@@ -1,0 +1,9 @@
+{
+  "proceed": false,
+  "n_datasets_tested": 0,
+  "n_datasets_passing": 0,
+  "min_datasets_passing": 2,
+  "shortcut_magnitude": {},
+  "verdicts": [],
+  "recommendation": "STOP. The central hypothesis is not supported at the gate. Per the proposal's Recommended sequence, redirect to D2 (shift-valid conformal prediction for fetal biometry) rather than continuing. Publish the null: it retires a stated but untested concern in the literature."
+}

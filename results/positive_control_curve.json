@@ -1,0 +1,34 @@
+[
+  {
+    "strength": 1.0,
+    "a_full": 0.9993,
+    "a_full_nomarker": 0.6741,
+    "drop": 0.32519999999999993,
+    "a_only": 0.5784,
+    "chance": 0.1667
+  },
+  {
+    "strength": 0.75,
+    "a_full": 0.9715,
+    "a_full_nomarker": 0.9532,
+    "drop": 0.018299999999999983,
+    "a_only": 0.1819,
+    "chance": 0.1667
+  },
+  {
+    "strength": 0.5,
+    "a_full": 0.9612,
+    "a_full_nomarker": 0.9566,
+    "drop": 0.0046000000000000485,
+    "a_only": 0.1805,
+    "chance": 0.1667
+  },
+  {
+    "strength": 0.25,
+    "a_full": 0.9542,
+    "a_full_nomarker": 0.9559,
+    "drop": -0.0016999999999999238,
+    "a_only": 0.1624,
+    "chance": 0.1667
+  }
+]

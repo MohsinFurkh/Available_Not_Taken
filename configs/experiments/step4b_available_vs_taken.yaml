@@ -1,0 +1,59 @@
+# Follow-up to the Step-4 gate, run only after it returned STOP.
+#
+# The gate showed that a model trained on A-full performs at chance on A-only,
+# and loses nothing when annotations are removed. That refutes H1 as
+# pre-registered. It does NOT establish that the annotations carry no label
+# information -- the annotation-geometry baseline says they do (0.408 balanced
+# accuracy against 0.167 chance on FETAL_PLANES, from hand-crafted descriptors
+# with no anatomy).
+#
+# This experiment reconciles the two by training *on* A-only. Outcomes:
+#   well above chance -> the shortcut is AVAILABLE but NOT TAKEN, because
+#                        anatomy is an easier route to 0.957. That is a
+#                        publishable positive finding in its own right.
+#   at chance         -> the information does not survive to the training
+#                        resolution, and the geometry baseline is measuring
+#                        something a CNN on 224px pixels cannot reach.
+#
+# Cost: 2 datasets x 3 folds x 2 seeds, same budget as the gate.
+
+name: step4b_available_vs_taken
+dataset: fetal_planes
+
+regimes: ["r_annotation_only"]
+
+model:
+  backbone: resnet50
+  pretrained: imagenet
+  image_size: 224
+
+split:
+  n_folds: 5
+  n_seeds: 2
+  seed0: 1000
+  val_fraction: 0.15
+  stratify: true
+  use_official_folds: true
+
+train:
+  epochs: 20          # longer than the gate: a weak signal needs more budget
+  batch_size: 64
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  optimizer: adamw
+  scheduler: cosine
+  warmup_epochs: 1
+  early_stop_patience: 6
+  num_workers: 2
+  amp: true
+
+eval:
+  test_variants: ["a_only", "a_full", "a_removed"]
+  calibration_bins: 15
+  bootstrap_replicates: 2000
+  saliency: false
+
+aux:
+  enabled: false
+
+output_dir: runs/step4b_available_vs_taken

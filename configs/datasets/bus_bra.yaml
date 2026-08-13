@@ -1,0 +1,19 @@
+# BUS-BRA -- cross-anatomy replication with published folds.
+# Sampled images retain calipers placed directly on the lesion plus burnt-in
+# laterality text ("MAMA ESQUERDA") and quadrant codes ("QSE"). The CSV has a
+# Side column that the pixels spell out, so laterality is trivially recoverable.
+name: bus_bra
+root: "datasets/BUS-BRA"   # set to wherever you extracted it
+task: classification
+label_column: label
+group_column: patient_id
+num_classes: 2
+class_names: ["benign", "malignant"]
+official_fold_column: official_fold   # K5P, the authors' pathology-stratified 5-fold
+mask_sensitivity_floor: 0.90
+grayscale: true   # B-mode is achromatic; packing single-channel is lossless and 3x smaller
+notes: >
+  1,875 images / 1,064 women. Lesion calipers are strongly correlated with the
+  lesion being *the* finding -- the canonical shortcut scenario, and the domain
+  BUSClean (Bunnell 2024) already operates in, which makes it the natural place
+  to reproduce BUSClean's extraction as a reproduction rather than a result.

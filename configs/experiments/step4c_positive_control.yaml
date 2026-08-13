@@ -1,0 +1,77 @@
+# Positive control / sensitivity calibration.
+#
+# The Step-4 gate returned a null, but its own equal-area control showed that
+# removing 0.7% of ANATOMY costs as little as removing 0.7% of annotations --
+# both at ~0.07x the run-to-run noise. So the gate never demonstrated that it
+# could detect a shortcut of this size at all, and the null cannot be
+# interpreted until it does.
+#
+# Here we plant a shortcut we control, matched to the real annotations in area
+# (0.7% of pixels) and intensity, and sweep how strongly it correlates with the
+# label. Run this file once per `synthetic.strength` in {1.0, 0.75, 0.5, 0.25}
+# via --synthetic-strength; the resulting curve is the weakest annotation-label
+# association this design can detect.
+#
+# Read it as:
+#   strength 1.0 -> A-only near ceiling : the design CAN see a shortcut, so the
+#                   real-annotation null is a real null.
+#   strength 1.0 -> A-only at chance    : the design cannot see any shortcut at
+#                   this scale, and the gate result says nothing about
+#                   annotations. Report that instead of the null.
+
+name: step4c_positive_control
+dataset: fetal_planes
+
+regimes: ["r_naive"]        # train on A-full + injected marker
+
+synthetic:
+  enabled: true
+  area_frac: 0.007          # matches measured median annotation coverage at 224px
+  intensity: 220            # matches burnt-in graphics, not anatomy
+  strength: 1.0             # swept from the CLI
+  grid: 4
+  seed: 7
+
+model:
+  backbone: resnet50
+  pretrained: imagenet
+  image_size: 224
+
+split:
+  n_folds: 5
+  n_seeds: 2
+  seed0: 1000
+  val_fraction: 0.15
+  stratify: true
+  use_official_folds: true
+
+train:
+  epochs: 12
+  batch_size: 64
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  optimizer: adamw
+  scheduler: cosine
+  warmup_epochs: 1
+  early_stop_patience: 4
+  num_workers: 2
+  amp: true
+
+eval:
+  # Two questions, two cells:
+  #   a_full__nomarker -- what does REMOVING a shortcut the model uses cost?
+  #                       Compare that drop against the real annotation-removal
+  #                       drop of -0.0002. This calibrates the A-removed cell,
+  #                       which is the only in-domain evidence in the study.
+  #   a_only           -- can the marker be read when anatomy is destroyed?
+  #                       Compare against the real A-only result of 0.176 to
+  #                       tell "not taken" apart from "could not transfer".
+  test_variants: ["a_full", "a_full__nomarker", "a_only", "a_removed"]
+  calibration_bins: 15
+  bootstrap_replicates: 2000
+  saliency: false
+
+aux:
+  enabled: false
+
+output_dir: runs/step4c_positive_control
