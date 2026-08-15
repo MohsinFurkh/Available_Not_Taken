@@ -1,6 +1,6 @@
-"""Saliency mass inside verified annotation masks (proposal Section C.10).
+"""Saliency mass inside verified annotation masks (see the released protocol).
 
-Saliency alone is weak evidence, and the proposal says so. Its role here is
+Saliency alone is weak evidence. Its role here is
 triangulation: an accuracy drop under A-removed *plus* above-chance A-only
 performance *plus* a large share of attribution mass sitting inside the
 annotation regions is strong evidence, and any one of the three alone is not.

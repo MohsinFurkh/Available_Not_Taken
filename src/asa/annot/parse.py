@@ -2,13 +2,13 @@
 
 This is the only place OCR is used, and it is deliberately isolated: if
 Tesseract is unavailable the audit (H1, H2) still runs in full, and only the
-supervision arm (H3) degrades. The proposal is explicit that the paper's weight
+supervision arm (H3) degrades. The paper's weight
 sits on the audit, so the dependency structure of the code should match.
 
 Nothing here claims novelty. Extraction of structured content from sonographer
 annotations is BUSClean's contribution (Bunnell et al. 2024, PLOS ONE); this
 module reproduces it for the fetal/ovarian datasets BUSClean does not cover, and
-the proposal commits to reporting extraction performance as a reproduction
+extraction performance is reported as a reproduction
 rather than as a result.
 """
 

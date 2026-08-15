@@ -16,7 +16,7 @@ agnostic:
     <extras>         ...    dataset-specific covariates kept for stratified reporting
                             (vendor, operator, BI-RADS, side, ...)
 
-The extra covariates matter: proposal Section 12 stratifies the shortcut
+The extra covariates matter: the protocol stratifies the shortcut
 magnitude by vendor and institution, and several of these covariates are
 *themselves* burnt into the pixels, which is the leak we are measuring.
 """
@@ -229,7 +229,7 @@ def build_mmotu(root: str | Path) -> pd.DataFrame:
     247 patients over 1,469 images, and the released split files are image-level.
     We therefore keep the official split as a reported column but derive our own
     patient-level folds; MMOTU is treated as supporting evidence only, exactly as
-    the proposal's dataset table states.
+    this study treats it.
     """
     root = Path(root)
     two_d = root / "OTU_2d"

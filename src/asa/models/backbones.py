@@ -1,6 +1,6 @@
 """Backbones and heads.
 
-**No architecture is proposed by this study.** Section C.4 is explicit that the
+**No architecture is proposed by this study.** the protocol is explicit that the
 contribution is the measurement and the reformulation, not the network, and
 Ambsdorf et al. (2025) provide direct evidence that methodological innovation is
 the wrong lever in this domain. The backbone exists to be varied so that the
@@ -9,7 +9,7 @@ other reason.
 
 Four options, matching the Section 10 baseline table:
 
-    resnet50     ImageNet          the field's default, and P2's backbone
+    resnet50     ImageNet          the field's default
     vit_b_16     ImageNet          different inductive bias; transformers may be
                                    more or less prone to text-like shortcuts
     usf_mae      public weights    pretrained on an annotation-inpainted corpus,
@@ -145,7 +145,7 @@ def _fetalclip_backbone(cfg: ModelConfig) -> Backbone:
 class AuditModel(nn.Module):
     """Backbone + task head + optional auxiliary weak-supervision heads.
 
-    Fusion is deliberately trivial (Section C.5): the auxiliary head is a linear
+    Fusion is deliberately trivial (the protocol): the auxiliary head is a linear
     layer on the same pooled features. A complex fusion mechanism would make it
     impossible to attribute an effect to the supervision signal rather than to
     the mechanism.

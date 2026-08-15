@@ -1,8 +1,7 @@
 """Configuration objects.
 
 Everything the study does is driven by YAML so that a run is reproducible from
-its config alone (proposal Section 9: "Grid published in full, including values
-tried and not chosen").
+its config alone (see the released protocol).
 """
 
 from __future__ import annotations
@@ -15,12 +14,12 @@ from typing import Any, Literal
 
 import yaml
 
-# The three image variants of the annotation triplet (proposal Section C.2),
-# plus the equal-area random-region control demanded by reviewer attack R5.
+# The three image variants of the annotation triplet (see the released protocol),
+# plus the equal-area random-region control demanded by the pixel-removal objection.
 Variant = Literal["a_full", "a_removed", "a_only", "ctrl_random"]
 VARIANTS: tuple[Variant, ...] = ("a_full", "a_removed", "a_only", "ctrl_random")
 
-# The three supervision regimes (proposal Section C.3).
+# The three supervision regimes (see the released protocol).
 Regime = Literal["r_naive", "r_clean", "r_supervised", "r_annotation_only"]
 REGIMES: tuple[Regime, ...] = ("r_naive", "r_clean", "r_supervised", "r_annotation_only")
 
@@ -52,7 +51,7 @@ class DatasetConfig:
     #: Column of the manifest used as the supervised target.
     label_column: str = "label"
     #: Column grouping images that must never straddle a split. Patient-level
-    #: separation is non-negotiable (proposal Section 9).
+    #: separation is non-negotiable (see the released protocol).
     group_column: str = "patient_id"
     num_classes: int = 0
     class_names: list[str] = field(default_factory=list)
@@ -60,7 +59,7 @@ class DatasetConfig:
     #: results stay comparable to the published literature.
     official_fold_column: str | None = None
     #: Images whose annotation masks are known to be unreliable are excluded by
-    #: the Section 9 gate; this is the per-dataset mask sensitivity floor.
+    #: the verification gate; this is the per-dataset mask sensitivity floor.
     mask_sensitivity_floor: float = 0.90
     #: Pack single-channel. B-mode is achromatic, so this is lossless and cuts
     #: the shard to a third -- which decides whether the package fits in a Drive
@@ -73,7 +72,7 @@ class DatasetConfig:
 
 @dataclass
 class AnnotationConfig:
-    """Annotation detection + variant construction (proposal Section C.2)."""
+    """Annotation detection + variant construction (see the released protocol)."""
 
     # --- fan / imaging-sector detection -----------------------------------
     fan_threshold: int = 10
@@ -141,7 +140,7 @@ class AnnotationConfig:
     #: size. Without this, 9%% of MMOTU-2D exceeded a 5%% mask area.
     overlay_max_component_area_frac: float = 0.02
     overlay_max_component_density: float = 0.30
-    #: Optional CLAHE + HSV K-means path, following P8's published pipeline.
+    #: Optional CLAHE + HSV K-means path, following a published removal pipeline.
     overlay_use_kmeans: bool = False
     overlay_kmeans_k: int = 5
 
@@ -155,7 +154,7 @@ class AnnotationConfig:
     inpaint_radius: int = 3
     #: Fill used outside the annotation regions when building A-only.
     a_only_fill: Literal["uniform", "noise", "black"] = "noise"
-    #: R5 control: inpaint random regions of equal area elsewhere in the fan.
+    #: Equal-area control: inpaint random regions elsewhere in the fan.
     ctrl_max_placement_tries: int = 40
 
 
@@ -226,6 +225,14 @@ class SyntheticShortcutConfig:
     #: annotations encode meaning by where they are placed.
     grid: int = 4
     seed: int = 7
+    #: "rectangle" -- a solid block at one of K canonical positions. Easy to
+    #: read, and therefore an UPPER bound on the design's sensitivity.
+    #: "glyph"     -- a rendered vendor-like string whose *content* carries the
+    #: class, scattered in position, jittered in scale, sometimes occluded.
+    #: Matched to real annotations on the property that governs learnability,
+    #: and therefore the bound a calibration actually needs.
+    cue: Literal["rectangle", "glyph"] = "rectangle"
+    occlusion_prob: float = 0.25
 
 
 @dataclass
@@ -242,7 +249,7 @@ class TrainConfig:
     amp: bool = True
     #: Fraction of available manual labels used, for the SO2 efficiency curve.
     label_budget: float = 1.0
-    #: Section C.8 mitigation arm: randomly strip / re-insert annotations.
+    #: Mitigation arm: randomly strip / re-insert annotations at training time.
     annotation_randomising_aug: bool = False
     annotation_aug_prob: float = 0.5
     grad_clip: float | None = 1.0

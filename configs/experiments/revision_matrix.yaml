@@ -1,0 +1,56 @@
+# Revision run: the full train x test matrix, with everything the first pass
+# promised but did not deliver.
+#
+# Differences from step4_gate.yaml, each closing a specific review item:
+#   regimes      adds r_clean, so A-removed->A-removed exists and the question
+#                "did training on annotated archives lower the anatomy ceiling?"
+#                becomes answerable (item 12)
+#   n_seeds 5    an SD from n=6 has a 95% interval spanning ~0.6-2.4x the
+#                estimate, and the whole noise floor rests on it (item 7b)
+#   predictions  saved, enabling the per-class breakdown the six-class average
+#                currently hides (item 3)
+#
+# 2 regimes x 5 folds x 5 seeds = 50 trainings per dataset. Results flush per
+# model and resume on re-entry, so this survives a session boundary.
+
+name: revision_matrix
+dataset: fetal_planes
+
+regimes: ["r_naive", "r_clean"]
+
+model:
+  backbone: resnet50
+  pretrained: imagenet
+  image_size: 224
+
+split:
+  n_folds: 5
+  n_seeds: 5
+  seed0: 1000
+  val_fraction: 0.15
+  stratify: true
+  use_official_folds: true
+
+train:
+  epochs: 12
+  batch_size: 64
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  optimizer: adamw
+  scheduler: cosine
+  warmup_epochs: 1
+  early_stop_patience: 4
+  num_workers: 2
+  amp: true
+
+eval:
+  test_variants: ["a_full", "a_removed", "a_only", "ctrl_random"]
+  calibration_bins: 15
+  bootstrap_replicates: 2000
+  save_predictions: true
+  saliency: false
+
+aux:
+  enabled: false
+
+output_dir: runs/revision_matrix

@@ -1,10 +1,9 @@
 """Patient-level splitting.
 
-Proposal Section 9: "No image, augmented copy, or video frame from a patient may
-appear in more than one partition." Every split function here operates on the
-group column and never on the row index, and the assertions are load-bearing --
-a grouping violation would invalidate every number in the study, and the
-stage-1 review found exactly this failure mode in the folder corpus.
+No image, augmented copy, or video frame from a patient may appear in more than
+one partition. Every split function here operates on the group column and never
+on the row index, and the assertions are load-bearing: a grouping violation
+would invalidate every number in the study.
 """
 
 from __future__ import annotations
@@ -117,9 +116,8 @@ def _carve_validation(
     """Split the non-test portion into train and validation, by group.
 
     The validation set is carved out of the *training* portion and never out of
-    the test portion. P3 in the folder corpus drew its validation set from its
-    test set; the proposal names that as a practice this study explicitly avoids
-    (Section 9, "Model selection").
+    the test portion. Drawing validation data from the test partition is a common
+    and invalidating shortcut; it is explicitly avoided here.
     """
     rest_groups = manifest.iloc[rest][dataset.group_column].to_numpy()
     unique_groups = np.unique(rest_groups)

@@ -3,7 +3,7 @@
 Everything that could differ between regimes and must not -- optimiser,
 schedule, augmentation, epoch budget, early-stopping rule -- is fixed here and
 read from one config, so that the only difference between R-naive and R-clean is
-which variant array the dataset reads (proposal Section C.6).
+which variant array the dataset reads (see the released protocol).
 """
 
 from __future__ import annotations
@@ -69,7 +69,7 @@ def _losses(
     cfg: ExperimentConfig,
     device: torch.device,
 ) -> tuple[torch.Tensor, dict[str, float]]:
-    """L = L_task + lambda * L_aux. No custom loss is proposed (Section C.7):
+    """L = L_task + lambda * L_aux. No custom loss is proposed (the protocol):
     a bespoke loss would signal the contribution had drifted toward method
     invention."""
     target = batch["target"].to(device)
@@ -173,7 +173,7 @@ def train_one(
             break
 
     # Model selection is on validation folds only; the test data is touched once
-    # per configuration, after this point (Section 9).
+    # per configuration, after this point.
     model.load_state_dict(best_state)
     return TrainResult(
         model=model,

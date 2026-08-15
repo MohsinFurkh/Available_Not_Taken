@@ -1,17 +1,16 @@
-"""Construction of the annotation triplet, plus the R5 control.
+"""Construction of the annotation triplet, plus the equal-area control.
 
     A-full       original image, annotations intact          (what archives contain)
     A-removed    annotations detected and inpainted          (what deployment looks like)
     A-only       annotation regions kept, anatomy destroyed  (the decisive condition)
-    ctrl-random  equal-area random regions inpainted instead (reviewer attack R5)
+    ctrl-random  equal-area random regions inpainted instead (the pixel-removal objection)
 
 A-only is what makes the audit an audit. A drop under A-removed is ambiguous --
 "you removed pixels and performance fell, so what?" -- but above-chance
 performance under A-only is not ambiguous at all. And ctrl-random is what
 separates "annotation removal hurt" from "inpainting anything hurts": if
 performance falls just as far when an equal area of *anatomy* is inpainted, the
-hypothesis is refuted, and the proposal pre-registers that as the refutation
-criterion (Section 15, R5).
+hypothesis is refuted, and that is pre-registered as the refutation criterion.
 """
 
 from __future__ import annotations
@@ -29,8 +28,8 @@ def _speckle_like(reference: np.ndarray, mask: np.ndarray, rng: np.random.Genera
     """Noise matched to the first two moments of the reference region.
 
     Used as a fill that is neither informative nor conspicuously smooth. A flat
-    fill is itself a detectable cue -- exactly the second shortcut Section 14
-    warns inpainting can create -- so the noise fill exists as the comparison
+    fill is itself a detectable cue -- the second shortcut that inpainting can
+    create -- so the noise fill exists as the comparison
     arm for that ablation.
     """
     source = reference[mask] if mask.any() else reference.ravel()
@@ -49,8 +48,8 @@ def inpaint(
 ) -> np.ndarray:
     """Fill ``mask`` in ``image``. Four methods, all reported side by side.
 
-    The four exist because Section 14 lists "inpainting artefacts as a new
-    shortcut" as a live failure mode: Navier-Stokes leaves smooth scars that a
+    The four exist because inpainting artefacts are themselves a candidate
+    shortcut: Navier-Stokes leaves smooth scars that a
     network can read as "an annotation used to be here". Comparing NS against
     Telea, a uniform fill and a speckle-matched fill bounds how much of any
     measured drop is an artefact of the removal rather than of the annotation.
@@ -121,8 +120,8 @@ def make_control(
 ) -> tuple[np.ndarray, np.ndarray]:
     """Inpaint an equal-area random region of *anatomy* instead of the annotations.
 
-    Section 15, R5: "You removed pixels and performance fell -- so what?" This
-    is the control that answers it. Each annotation component is translated to a
+    "You removed pixels and performance fell -- so what?" This is the control that
+    answers that objection. Each annotation component is translated to a
     random position inside the imaging sector, preserving the component's exact
     shape and area, so the control differs from A-removed in *location only*.
 
@@ -183,12 +182,10 @@ def randomise_annotations(
     cfg: AnnotationConfig,
     rng: np.random.Generator,
 ) -> np.ndarray:
-    """Section C.8 mitigation: strip this image's annotations, optionally pasting
+    """Mitigation: strip this image's annotations, optionally pasting
     a different image's annotations in their place.
 
-    This is the cheapest plausible fix for the shortcut, and the proposal is
-    explicit that it must be tested *before* anything more elaborate is
-    proposed: if it works, it is the paper's practical recommendation and worth
+    This is the cheapest plausible fix for the shortcut, and It must be tested *before* anything more elaborate is proposed: if it works, it is the paper's practical recommendation and worth
     more than a novel method.
     """
     out = inpaint(image, annotation_mask, cfg, rng=rng)

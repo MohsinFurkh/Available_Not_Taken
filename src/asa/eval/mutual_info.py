@@ -5,7 +5,7 @@ from annotation prevalence and annotation-label MI, the finding generalises even
 where the magnitudes differ; if it is not, the paper's claim reduces to "measure
 this yourself" plus a released protocol. Either way this quantity is computed
 *before* any model is trained, so it is a prediction rather than a
-post-hoc rationalisation, and Section 15 R3 uses it to answer "what is
+post-hoc rationalisation, and the pixel-removal objection uses it to answer "what is
 modality-specific here?" -- operator-placed calipers should carry systematically
 more label information than the incidental confounds of the radiography
 shortcut literature.
@@ -120,7 +120,7 @@ def annotation_only_predictability(
     "If a five-feature logistic regression on annotation geometry matches the
     CNN's A-only performance, the shortcut is fully explained" -- and it is
     explained without any deep learning at all, which is the cheapest possible
-    answer to reviewer attack R1 ("this is data cleaning dressed up as
+    answer to the pixel-removal objection ("this is data cleaning dressed up as
     science").
 
     Grouped cross-validation, because these features are near-constant within a
@@ -207,7 +207,7 @@ def prevalence_vs_shortcut(records: Sequence[dict[str, Any]]) -> dict[str, Any]:
     Each record needs ``dataset``, ``annotation_prevalence``, ``mi_max_nats`` and
     ``shortcut_magnitude``. With four datasets this is a four-point regression --
     underpowered, and reported as descriptive rather than inferential, which is
-    exactly the honesty the proposal's Section 15 R10 response commits to.
+    the honest treatment of an underpowered comparison.
     """
     if len(records) < 3:
         return {"n_datasets": len(records), "note": "too few datasets for a correlation; report descriptively"}

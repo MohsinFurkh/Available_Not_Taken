@@ -134,7 +134,7 @@ def _report(row: dict[str, Any], index: int, total: int) -> dict[str, Any]:
 def prevalence_report(features: pd.DataFrame) -> dict[str, Any]:
     """Dataset-level annotation prevalence.
 
-    This is the screening layer of Section C.1 and the input to H4: shortcut
+    This is the screening layer of the protocol and the input to H4: shortcut
     magnitude is hypothesised to be predictable from annotation prevalence and
     annotation-label mutual information, so both must be measured before any
     model is trained.
@@ -168,7 +168,7 @@ def export_verification_sample(
     seed: int = 20260805,
     cfg: AnnotationConfig | None = None,
 ) -> pd.DataFrame:
-    """Write the human-verification sample (proposal Section 9).
+    """Write the human-verification sample (see the released protocol).
 
     Two independent verifiers score these overlays and inter-verifier agreement
     is reported, because "the entire study rests on mask quality". The scoring

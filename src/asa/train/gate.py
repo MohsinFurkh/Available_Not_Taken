@@ -1,7 +1,5 @@
 """Step 4: the minimal decisive experiment, and the project's kill switch.
 
-Proposal, Recommended sequence, Step 4:
-
     "Before building anything else: train one ResNet-50 on one dataset
     (A-full), test on A-only. If performance is at chance across two datasets,
     the central hypothesis is refuted cheaply and the project should be
@@ -42,7 +40,7 @@ class GateVerdict:
     a_full_score: float
     #: The deployment penalty: A-full-trained, A-removed-tested.
     a_removed_score: float
-    #: The R5 control: equal area of anatomy inpainted instead.
+    #: Equal-area control: the same area of anatomy inpainted instead.
     ctrl_score: float | None = None
     passed: bool = False
     reasons: list[str] = field(default_factory=list)
@@ -114,7 +112,7 @@ def evaluate_gate(
             f"{verdict.chance:.4f} by the pre-registered margin {min_margin}"
         )
 
-    # The R5 refutation: if inpainting an equal area of anatomy costs as much as
+    # The refutation: if inpainting an equal area of anatomy costs as much as
     # inpainting the annotations, the drop is about pixel removal and not about
     # annotations, and the hypothesis is refuted no matter what A-only says.
     if np.isfinite(verdict.ctrl_score) and np.isfinite(verdict.a_removed_score):
@@ -134,9 +132,8 @@ def evaluate_gate(
 def decide(verdicts: list[GateVerdict], min_datasets_passing: int = 2) -> dict[str, Any]:
     """The go/no-go decision.
 
-    Two datasets, not one: the proposal's own novelty stress test names
-    "dataset-specific improvement" as the main risk for D1, and a shortcut seen
-    on exactly one annotation convention is a quirk rather than a finding.
+    Two datasets, not one: a shortcut seen on exactly one annotation convention
+    is a quirk rather than a finding.
     """
     # A verdict computed from nothing is worse than no verdict: 0 >= 2 is False,
     # so an empty list would silently produce a confident-looking STOP report
@@ -162,10 +159,8 @@ def decide(verdicts: list[GateVerdict], min_datasets_passing: int = 2) -> dict[s
         "recommendation": (
             "PROCEED to Step 5 (pre-registration) and Step 6 (full matrix)."
             if proceed
-            else "STOP. The central hypothesis is not supported at the gate. Per the proposal's "
-                 "Recommended sequence, redirect to D2 (shift-valid conformal prediction for fetal "
-                 "biometry) rather than continuing. Publish the null: it retires a stated but "
-                 "untested concern in the literature."
+            else "STOP. The central hypothesis is not supported at the gate. The null is "
+                 "itself reportable, provided the design's sensitivity is established."
         ),
     }
 
@@ -207,7 +202,7 @@ def write_gate_report(decision: dict[str, Any], out_dir: str | Path) -> Path:
         "reliability analysis on every matrix cell.",
         "",
         "The equal-area random-region control is included here rather than later because it is the",
-        "single result that can refute the hypothesis outright (proposal Section 15, R5).",
+        "single result that can refute the hypothesis outright (see the released protocol).",
     ]
     report = out_dir / "gate_report.md"
     report.write_text("\n".join(lines) + "\n")

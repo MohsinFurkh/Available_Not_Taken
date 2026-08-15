@@ -19,5 +19,5 @@ grayscale: false
 notes: >
   1,469 images over 247 patients, but no patient identifier is published for the
   2D set, so grouping is at file level. Treated as supporting evidence only,
-  exactly as the proposal's dataset table states -- 247 patients over 8 classes
+  247 patients over 8 classes
   is a stress case, not a primary arm.

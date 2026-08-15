@@ -5,7 +5,7 @@
 # (anatomy destroyed, annotations kept). If A-only clears chance on two
 # datasets, the shortcut exists and the project proceeds. If it does not, the
 # central hypothesis is refuted for about an hour of GPU time and the proposal's
-# own recommendation is to redirect to D2.
+# own recommendation is to redirect to the alternative study.
 #
 # Runs on **Kaggle**, Colab, or any local GPU box -- the environment is detected
 # below. Paste these cells into a Kaggle notebook, or convert with
@@ -316,7 +316,7 @@ pd.DataFrame([v.as_dict() for v in verdicts])[
 #   and never tested. Redirect to D2.
 # * **The equal-area control drops as much as A-removed** -- the effect is pixel
 #   removal, not annotations. `evaluate_gate` fails the dataset on this
-#   automatically; it is reviewer attack R5 and it refutes the hypothesis
+#   automatically; it is the pixel-removal objection and it refutes the hypothesis
 #   regardless of what A-only says.
 #
 # One thing the gate does *not* establish: how much of the headline A-full

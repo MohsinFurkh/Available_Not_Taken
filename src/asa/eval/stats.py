@@ -1,6 +1,8 @@
 """Statistical machinery.
 
-Proposal Section 15, R9: "Statistical testing is inadequate / effects are within
+A study whose claim is that an effect is ABSENT cannot afford weak statistics.
+Everything reported carries a patient-level bootstrap interval; contrasts are
+paired; tests are corrected across the declared family; and seed variance is
 noise" is the criticism stage 1 levelled at five of seven folder papers, so this
 study cannot afford it. Everything reported carries a patient-level bootstrap
 interval; every hypothesis test is paired across matched folds, corrected across
@@ -120,7 +122,7 @@ def bootstrap_difference(
 
 def paired_test(a: Sequence[float], b: Sequence[float], alpha: float = 0.05) -> dict[str, Any]:
     """Paired t or Wilcoxon signed-rank, chosen by a normality check on the
-    differences (proposal Section 9), never by which one gives the answer."""
+    differences (see the released protocol), never by which one gives the answer."""
     a_arr, b_arr = np.asarray(a, dtype=float), np.asarray(b, dtype=float)
     differences = a_arr - b_arr
     n = len(differences)
@@ -196,9 +198,9 @@ def holm_bonferroni(p_values: dict[str, float], alpha: float = 0.05) -> dict[str
 def variance_components(records: Sequence[dict[str, Any]], metric: str) -> dict[str, float]:
     """Split observed variance into fold and seed components.
 
-    Section 9 requires this so that a reader can tell whether an effect exceeds
+    Reported so that a reader can tell whether an effect exceeds
     training noise. If seed variance dominates fold variance, no comparison of
-    single runs means anything -- which is what the stage-1 review found in P4.
+    single runs means anything.
     """
     values = np.array([r[metric] for r in records], dtype=float)
     folds = np.array([r["fold"] for r in records])

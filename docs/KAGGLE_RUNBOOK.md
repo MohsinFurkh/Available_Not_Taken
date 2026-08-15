@@ -205,7 +205,7 @@ When the version finishes: **Output** tab → download
   a quirk, not a finding;
 - and the **equal-area control** must *not* drop as much as annotation removal.
   If it does, the effect is pixel removal rather than annotations, and the
-  dataset fails automatically. This is reviewer attack R5 and it refutes the
+  dataset fails automatically. This is the pixel-removal objection and it refutes the
   hypothesis regardless of what A-only shows.
 
 Three outcomes:
@@ -213,7 +213,7 @@ Three outcomes:
 | Verdict | What it means | What to do |
 |---|---|---|
 | **PROCEED** | The shortcut exists. | Pre-register (proposal Step 5) *before* the full matrix, so H1–H4 and the analysis plan are fixed before the numbers are known. |
-| **STOP**, A-only at chance | Hypothesis refuted for ~1 GPU-hour. | This is a publishable null — it retires a concern BUSClean stated and never tested. Or redirect to D2. |
+| **STOP**, A-only at chance | Hypothesis refuted for ~1 GPU-hour. | This is a publishable null — it retires a concern BUSClean stated and never tested. Or redirect to the alternative study. |
 | **STOP**, control drops too | The effect is pixel removal. | Same as above. Do not tune the threshold to rescue it. |
 
 What the gate does **not** establish: how much of the headline A-full number is

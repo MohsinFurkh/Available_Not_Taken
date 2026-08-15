@@ -2,17 +2,18 @@
 
 Code, results and figures for:
 
-> **Available but Not Taken: Burnt-In Annotations Carry Label Information That
-> Ultrasound Classifiers Do Not Use**
+> **Available but Not Taken: Burnt-In Annotations Can Carry Label Information
+> That Archive-Trained Ultrasound Classifiers Do Not Use**
 
 Clinical ultrasound archives are annotation-rich — sonographers freeze the
 image, place calipers, and burn measurements and vendor text into the pixels.
 Models are trained on those archives and deployed on live, un-annotated
 scanning. It has been suggested that this inflates reported performance.
 
-**We tested it. It doesn't.** And because a null result is only worth reading if
-the experiment could have found something, we calibrated the experiment's
-sensitivity by planting a shortcut of known strength.
+**We tested it. In these datasets, it doesn't.** And because a null is only worth
+reading if the experiment could have found something, we calibrate the design's
+sensitivity by planting a cue of known strength and sweeping how strongly it
+predicts the label.
 
 ---
 
@@ -20,10 +21,17 @@ sensitivity by planting a shortcut of known strength.
 
 | | value |
 |---|---|
-| Cost of removing every detected annotation (FETAL_PLANES_DB) | **−0.0002** balanced accuracy |
-| Run-to-run SD of the same configuration | 0.0037 |
-| Cost of removing an *adopted* synthetic shortcut of identical area | **+0.3253** |
-| Design sensitivity vs. the effect actually observed | **≈ 1830×** |
+| Cost of removing every detected annotation (FETAL_PLANES_DB) | **-0.0002** balanced accuracy |
+| Paired-difference SD of that contrast | 0.0013 |
+| Equivalence within ±0.005 (TOST) | **p = 0.0002** |
+| Cost of removing an *adopted* synthetic cue (ρ = 1.0) | **+0.3253** |
+| Smallest removal cost this design detects | between +0.0046 and +0.0184 |
+
+The design detects a cue once its label correlation reaches ρ = 0.75
+(removal cost +0.0184, Holm-adjusted p = 0.007) and does not
+resolve one at ρ ≤ 0.5. We report that interval rather than a
+ratio against the observed effect: dividing by a quantity argued to be equivalent
+to zero gives a number governed by rounding, not by the experiment.
 
 <p align="center">
   <img src="figures/fig4_sensitivity.png" width="620"><br>
@@ -35,10 +43,12 @@ sensitivity by planting a shortcut of known strength.
 
 Two findings explain the null rather than restating it:
 
-- **The shortcut is available.** A classifier trained on annotation pixels alone
-  — anatomy replaced by noise — reaches **0.5945** balanced accuracy on 6-class
-  fetal plane classification against 0.167 chance (3.6×). The information is
-  there; the archive-trained model routes around it.
+- **The cue can be available, and is still not taken.** A classifier trained on
+  annotation pixels alone reaches **0.5945** on 6-class fetal plane
+  classification against 0.167 chance (3.6×). On BUS-BRA — 84% annotated — the
+  same experiment returns **0.5036**, exactly chance, because calipers mark
+  *where* a lesion is, not *what* it is. Annotation density does not predict
+  annotation–label information.
 - **Adoption has a sharp threshold.** Dropping the synthetic shortcut's
   reliability from 1.0 to 0.75 collapses its removal cost from +0.3253 to
   +0.0184. Anatomy already delivers 0.957, so anything less than a near-perfect
@@ -133,7 +143,9 @@ docs/          dataset acquisition, Kaggle runbook
   top-hat contrast plus an edge-sharpness ratio, which are brightness-invariant.
 - **Colour Doppler is not annotation.** It is chromatic but it is imaging data;
   inpainting it would destroy the measurement. It is detected and withheld.
-- **Chance is empirical**, computed per test fold, not assumed to be 1/K.
+- **Balanced accuracy is the primary metric**, whose chance level is exactly
+  1/K irrespective of prevalence. The empirical class distribution is used where
+  it matters — macro-F1 and the regression reference.
 - **Bootstrap resamples patients, not images.** Frames from one subject are not
   independent observations.
 - **Splits are patient-level throughout**, with leakage assertions that fail loudly.
@@ -146,9 +158,14 @@ docs/          dataset acquisition, Kaggle runbook
   automatic suspect-mask rate is reported instead.
 - Only ResNet-50/ImageNet was run. Foundation encoders are supported by the code
   but untested.
-- Four datasets, three anatomies, one image resolution. Annotation conventions
-  are institution-specific; the pipeline is released so the question can be
-  re-asked elsewhere rather than assumed to transfer.
+- Four datasets are **characterised**; classification experiments are reported
+  for **two** (FETAL_PLANES_DB and BUS-BRA, 14,275 images). One architecture,
+  one resolution (224×224). Annotation conventions are institution-specific;
+  the pipeline is released so the question can be re-asked elsewhere.
+- The synthetic cue used for calibration is a solid rectangle whose *position*
+  encodes the class — easier to read than a glyph string, so the sweep bounds
+  sensitivity from above. A learnability-matched glyph cue is implemented
+  (`--synthetic-cue glyph`) but its sweep is not yet reported.
 
 ## Citation
 

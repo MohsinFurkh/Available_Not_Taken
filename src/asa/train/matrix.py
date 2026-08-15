@@ -1,13 +1,12 @@
 """The train x test variant matrix -- the study's central experiment.
 
-Proposal Section 9: "The 3x3 train-test matrix is not a leaderboard. Its
-diagonal is conventional performance; its off-diagonals are the scientific
-content."
+The matrix is not a leaderboard: its diagonal is conventional performance and
+its off-diagonals carry the scientific content.
 
     (train a_full,    test a_full)      conventional reported performance
     (train a_full,    test a_removed)   THE DEPLOYMENT PENALTY            -> H2
     (train a_full,    test a_only)      THE SHORTCUT, isolated            -> H1
-    (train a_full,    test ctrl_random) the R5 refutation control
+    (train a_full,    test ctrl_random) the pixel-removal control
     (train a_removed, test a_full)      robustness to unseen annotations
     (train a_removed, test a_removed)   the field's implicit best practice
 
@@ -165,7 +164,7 @@ def run_matrix(
                     test_groups = np.array([row_to_group[r] for r in predicted["rows"]])
 
                 # Per-image predictions, for the qualitative analysis the
-                # proposal asks for in Section 14 ("manual review of a sample of
+                # qualitative analysis needs ("manual review of a sample of
                 # cases correct under A-full and wrong under A-removed"). Not
                 # recoverable from the aggregate table afterwards, and cheap:
                 # a few hundred KB per run.
@@ -197,6 +196,7 @@ def run_matrix(
                         "label_budget": cfg.train.label_budget,
                         "annotation_aug": cfg.train.annotation_randomising_aug,
                         "synthetic_strength": cfg.synthetic.strength if cfg.synthetic.enabled else None,
+                        "synthetic_cue": cfg.synthetic.cue if cfg.synthetic.enabled else None,
                         "synthetic_area_frac": cfg.synthetic.area_frac if cfg.synthetic.enabled else None,
                         "fold": split.fold,
                         "seed": seed,

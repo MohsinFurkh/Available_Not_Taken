@@ -15,7 +15,7 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 
 from ..config import ExperimentConfig
-from .shortcut import inject_synthetic_shortcut
+from .shortcut import inject_glyph_shortcut, inject_synthetic_shortcut
 
 #: Suffix requesting a variant WITHOUT the synthetic marker. The positive
 #: control needs to measure what it costs to *remove* a shortcut the model is
@@ -32,7 +32,7 @@ class VariantDataset(Dataset):
     """Serves one variant of a packaged dataset.
 
     Augmentation is applied strictly after splitting and identically across all
-    regimes (proposal Section 9); the only thing that differs between regimes is
+    regimes (see the released protocol); the only thing that differs between regimes is
     which variant array is read.
     """
 
@@ -101,9 +101,9 @@ class VariantDataset(Dataset):
         variant = self.variant
 
         if self.annotation_randomising_aug and self._rng.random() < self.annotation_aug_prob:
-            # Section C.8: at training time, randomly show the model the
+            # the protocol: at training time, randomly show the model the
             # annotation-free version of an otherwise annotated example. The
-            # cheapest plausible mitigation, and one the proposal insists must
+            # cheapest plausible mitigation, and one that must
             # be tested before anything more elaborate is proposed.
             variant = "a_removed" if variant == "a_full" else variant
 
@@ -118,7 +118,12 @@ class VariantDataset(Dataset):
         # flips and rotations as everything else -- a marker exempt from
         # augmentation would be easier to learn than any real annotation.
         if inject:
-            image = inject_synthetic_shortcut(
+            injector = (
+                inject_glyph_shortcut
+                if getattr(self.synthetic, "cue", "rectangle") == "glyph"
+                else inject_synthetic_shortcut
+            )
+            image = injector(
                 image, int(self.labels[position]), self.num_classes, self.synthetic, row
             )
         if self.augment:

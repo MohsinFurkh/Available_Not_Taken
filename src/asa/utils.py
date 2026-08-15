@@ -31,7 +31,7 @@ def get_logger(name: str = LOGGER_NAME) -> logging.Logger:
 
 def set_seed(seed: int) -> None:
     """Seed every RNG we touch. Seed variance is reported separately from fold
-    variance (proposal Section 9), so seeding must be exact and total."""
+    variance (see the released protocol), so seeding must be exact and total."""
     random.seed(seed)
     np.random.seed(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)

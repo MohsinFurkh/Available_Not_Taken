@@ -202,13 +202,15 @@ def cmd_matrix(args: argparse.Namespace) -> None:
         overrides["train"] = {"label_budget": args.label_budget}
     if args.synthetic_strength is not None:
         overrides["synthetic"] = {"enabled": True, "strength": args.synthetic_strength}
+        if args.synthetic_cue:
+            overrides["synthetic"]["cue"] = args.synthetic_cue
     cfg = load_experiment(CONFIG_ROOT / "experiments" / f"{args.experiment}.yaml", CONFIG_ROOT, overrides)
 
     _warn_if_stale(args.dataset, args.size)
     index, arrays, _ = load_package(_work(args.dataset) / f"pack_{args.size}")
     suffix = f"{cfg.model.backbone}_lb{cfg.train.label_budget}"
     if cfg.synthetic.enabled:
-        suffix += f"_synth{cfg.synthetic.strength}"
+        suffix += f"_{cfg.synthetic.cue}{cfg.synthetic.strength}"
     out_dir = REPO_ROOT / cfg.output_dir / args.dataset / suffix
     results = run_matrix(cfg, index, arrays, out_dir=out_dir)
     summary = summarise_matrix(results)
@@ -272,6 +274,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--label-budget", type=float, default=None)
     p.add_argument("--synthetic-strength", type=float, default=None,
                    help="positive control: P(injected marker encodes the true label)")
+    p.add_argument("--synthetic-cue", choices=["rectangle", "glyph"], default=None,
+                   help="rectangle = easy block cue (upper bound); glyph = learnability-matched")
     p.set_defaults(func=cmd_matrix)
 
     return parser

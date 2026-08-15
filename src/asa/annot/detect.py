@@ -2,10 +2,9 @@
 
 Design commitment: **the annotation mask does not depend on OCR.**
 
-The proposal's Section C.2 names Tesseract as part of P8's published removal
-pipeline, and we do use it -- but only in ``asa.annot.parse``, to read the
+Published removal pipelines use Tesseract, and so do we -- but only in ``asa.annot.parse``, to read the
 *content* of the text for the weak-supervision arm. The mask itself is built
-from geometry and morphology, because Section 14 identifies mask quality as
+from geometry and morphology, because mask quality is
 "the single largest threat to validity": if the mask came from OCR then every
 headline number would be bounded by OCR recall, and the audit would be
 measuring Tesseract rather than measuring the shortcut.
@@ -300,7 +299,7 @@ def detect_calipers(labels: np.ndarray, blobs: list[_Blob], cfg: AnnotationConfi
 
     Calipers are the causally interesting annotation: unlike a vendor banner
     they are placed *by the operator, on the finding, at the moment of
-    diagnosis* (proposal Section 15, R3), so their position is downstream of the
+    diagnosis* (see the released protocol), so their position is downstream of the
     label rather than incidental to it.
     """
     mask = np.zeros(labels.shape, dtype=bool)
@@ -473,8 +472,8 @@ def detect_redaction(gray: np.ndarray, fan: np.ndarray, cfg: AnnotationConfig) -
     HC18 ships with a black box over the bottom-right corner. That box is
     annotation removal *already performed by the curator*, undocumented and
     unmeasured -- precisely the "cleaning is undocumented and its effect
-    unmeasured" problem named in Section C.1, and a candidate second shortcut in
-    its own right (Section 14). It is detected separately so it can be reported
+    unmeasured" problem named in the protocol, and a candidate second shortcut in
+    its own right. It is detected separately so it can be reported
     rather than silently absorbed into either anatomy or annotation.
 
     ``fan`` is accepted but unused: the box is often pasted over the corner
@@ -600,7 +599,7 @@ def geometry_features(det: Detection, gray: np.ndarray) -> dict[str, float]:
     feats["redaction_area_frac"] = float(det.redaction.sum()) / area
     feats["doppler_area_frac"] = float(det.doppler.sum()) / area if det.doppler is not None else 0.0
     # Masks this large are almost always a detector failure rather than a
-    # heavily annotated frame. Flagged rather than silently used: Section 14
+    # heavily annotated frame. Flagged rather than silently used: mask quality
     # names mask quality as the study's largest threat to validity, and the A7
     # ablation re-runs every headline number on high-confidence masks only.
     feats["mask_suspect"] = float(feats["annotation_area_frac"] > 0.15)
