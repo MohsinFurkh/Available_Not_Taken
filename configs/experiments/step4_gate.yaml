@@ -1,20 +1,7 @@
-# Step 4 -- the minimal decisive experiment and the project's kill switch.
-#
-# Proposal, Recommended sequence: "Before building anything else: train one
-# ResNet-50 on one dataset (A-full), test on A-only. If performance is at chance
-# across two datasets, the central hypothesis is refuted cheaply and the project
-# should be redirected to D2. This is the go/no-go gate and it costs almost
-# nothing."
-#
-# Deliberately small: one backbone, one regime, 3 folds x 2 seeds, short
-# schedule. On a Colab T4 this is roughly 40-60 minutes per dataset at 224 px.
-# Do NOT enlarge it before it has been run -- the whole point is that the gate
-# is cheap enough that a negative result costs two weeks rather than two months.
-
 name: step4_gate
 dataset: fetal_planes
 
-regimes: ["r_naive"]          # train on A-full only; this is what the gate tests
+regimes: ["r_naive"]         
 
 model:
   backbone: resnet50
