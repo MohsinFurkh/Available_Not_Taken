@@ -1,13 +1,3 @@
-# Step 6 -- the full train x test matrix.
-#
-# Only run this after the Step 4 gate has passed on at least two datasets and
-# the study has been pre-registered (Step 5). Running it first would be building
-# the thing the gate exists to avoid building.
-#
-# Cost: 3 regimes x 5 folds x 5 seeds = 75 trainings per backbone per dataset,
-# each evaluated on 4 variants. Sweep the backbone and the dataset from the CLI
-# rather than duplicating this file.
-
 name: full_matrix
 dataset: fetal_planes
 
